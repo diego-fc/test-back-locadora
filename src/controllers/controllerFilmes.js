@@ -1,22 +1,35 @@
 const { PrismaClient } = require("@prisma/client");
-const { object, string } = require("zod");
+const { object, string, number } = require("zod");
 
 const prisma = new PrismaClient();
 
 async function createFilms(req, res) {
   const { body } = req;
   const createFilmsSchema = object({
-    email: string().email(),
-    nome: string(),
-    acesso: string(),
+    titulo: string(),
+    imagem: string(),
+    sinopse: string(),
+    elenco: string(),
+    categoria: string(),
+    valorLocacao: number(),
+    quantidadeDisponivel: number(),
+    anoLancamento: number(),
   });
 
   const createFilms = async (data) => {
     try {
       const validatedData = createFilmsSchema.parse(data);
+      console.log(
+        "🚀 ~ file: controllerFilmes.js:22 ~ createFilms ~ data:",
+        data
+      );
       const films = await prisma.filme.create({ data: validatedData });
       return films;
     } catch (error) {
+      console.log(
+        "🚀 ~ file: controllerFilmes.js:20 ~ createFilms ~ error:",
+        error
+      );
       return null;
     }
   };
@@ -25,7 +38,7 @@ async function createFilms(req, res) {
     try {
       const newFilms = await createFilms(body);
       if (newFilms === null) {
-        return res.json("Email já existe");
+        return res.status(400).json("Email já existe");
       }
       return res.json(newFilms);
     } catch (error) {}
@@ -59,16 +72,34 @@ async function findFilms(req, res) {
 
 async function updateFilms(req, res) {
   const {
-    body: { nome, email, acesso },
+    body: {
+      titulo,
+      anoLancamento,
+      categoria,
+      elenco,
+      imagem,
+      quantidadeDisponivel,
+      sinopse,
+      valorLocacao,
+    },
     params: { id },
   } = req;
 
   const main = async () => {
     try {
       const updateddFilms = await prisma.filme.update({
-				where: { id: parseInt(id) },
-				data: { nome, email, acesso },
-			});
+        where: { id: parseInt(id) },
+        data: {
+          titulo,
+          anoLancamento,
+          categoria,
+          elenco,
+          imagem,
+          quantidadeDisponivel,
+          sinopse,
+          valorLocacao,
+        },
+      });
       if (updateddFilms === null) {
         return res.json("Não foi possivel atualizar");
       }
@@ -87,14 +118,14 @@ async function updateFilms(req, res) {
 
 async function deleteFilms(req, res) {
   try {
-		const { id } = req.path;
-		  const deletedFilms = await prisma.filme.delete({
-		    where: { id: parseInt(id) },
-		  });
-		  res.json(deletedFilms);
-	} catch (error) {
-		res.status(404).json("Não foi possivel deletar Usuario")
-	}
+    const { id } = req.params;
+    const deletedFilms = await prisma.filme.delete({
+      where: { id: parseInt(id) },
+    });
+    res.json(deletedFilms);
+  } catch (error) {
+    res.status(404).json("Não foi possivel deletar Usuario");
+  }
 }
 
 module.exports = { createFilms, findFilms, updateFilms, deleteFilms };
