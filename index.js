@@ -2,7 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const { createUser, findUser, updateUser, deleteUser } = require("./src/controllers/controllerUsuario");
-const { createFilms, findFilms, updateFilms, deleteFilms } = require("./src/controllers/controllerFilmes")
+const { createFilms, findFilms, updateFilms, deleteFilms } = require("./src/controllers/controllerFilmes");
+const { createLocation, findLocation, updateLocation, deleteLocation } = require("./src/controllers/controllerLocation");
 
 const server = express();
 
@@ -20,5 +21,11 @@ server.post("/film/create", createFilms);
 server.get("/film", findFilms);
 server.put("/film/:id", updateFilms);
 server.delete("/film/:id", deleteFilms);
+
+//Filmes
+server.post("/location/create", createLocation);
+server.get("/location", findLocation);
+server.put("/location/:id", updateLocation);
+server.delete("/location/:id", deleteLocation);
 
 server.listen(3001);
