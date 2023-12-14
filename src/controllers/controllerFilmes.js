@@ -3,19 +3,19 @@ const { object, string } = require("zod");
 
 const prisma = new PrismaClient();
 
-async function createUser(req, res) {
+async function createFilms(req, res) {
   const { body } = req;
-  const createUserSchema = object({
+  const createFilmsSchema = object({
     email: string().email(),
     nome: string(),
     acesso: string(),
   });
 
-  const createUser = async (data) => {
+  const createFilms = async (data) => {
     try {
-      const validatedData = createUserSchema.parse(data);
-      const user = await prisma.pessoa.create({ data: validatedData });
-      return user;
+      const validatedData = createFilmsSchema.parse(data);
+      const films = await prisma.filme.create({ data: validatedData });
+      return films;
     } catch (error) {
       return null;
     }
@@ -23,11 +23,11 @@ async function createUser(req, res) {
 
   const main = async () => {
     try {
-      const newUser = await createUser(body);
-      if (newUser === null) {
+      const newFilms = await createFilms(body);
+      if (newFilms === null) {
         return res.json("Email já existe");
       }
-      return res.json(newUser);
+      return res.json(newFilms);
     } catch (error) {}
   };
 
@@ -40,11 +40,11 @@ async function createUser(req, res) {
     });
 }
 
-async function findUser(req, res) {
+async function findFilms(req, res) {
   const main = async () => {
     try {
-      const users = await prisma.pessoa.findMany();
-      return res.status(200).json(users);
+      const filmss = await prisma.filme.findMany();
+      return res.status(200).json(filmss);
     } catch (error) {}
   };
 
@@ -57,7 +57,7 @@ async function findUser(req, res) {
     });
 }
 
-async function updateUser(req, res) {
+async function updateFilms(req, res) {
   const {
     body: { nome, email, acesso },
     params: { id },
@@ -65,14 +65,14 @@ async function updateUser(req, res) {
 
   const main = async () => {
     try {
-      const updateddUser = await prisma.pessoa.update({
+      const updateddFilms = await prisma.filme.update({
 				where: { id: parseInt(id) },
 				data: { nome, email, acesso },
 			});
-      if (updateddUser === null) {
+      if (updateddFilms === null) {
         return res.json("Não foi possivel atualizar");
       }
-      return res.json(updateddUser);
+      return res.json(updateddFilms);
     } catch (error) {}
   };
 
@@ -85,16 +85,16 @@ async function updateUser(req, res) {
     });
 }
 
-async function deleteUser(req, res) {
+async function deleteFilms(req, res) {
   try {
 		const { id } = req.path;
-		  const deletedUser = await prisma.pessoa.delete({
+		  const deletedFilms = await prisma.filme.delete({
 		    where: { id: parseInt(id) },
 		  });
-		  res.json(deletedUser);
+		  res.json(deletedFilms);
 	} catch (error) {
 		res.status(404).json("Não foi possivel deletar Usuario")
 	}
 }
 
-module.exports = { createUser, findUser, updateUser, deleteUser };
+module.exports = { createFilms, findFilms, updateFilms, deleteFilms };
