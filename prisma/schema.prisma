@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// schema.prisma
+
+// Modelo de Pessoas (Usuário, Cliente, Diretor, Ator)
+model Usuario {
+  id     Int    @id @default(autoincrement())
+  nome   String
+  email  String @unique
+  // Adicione outros campos específicos para cada tipo de pessoa, se necessário
+  acesso String
+
+  locacoes Locacao[]
+}
+
+// Modelo de Filme
+model Filme {
+  id                   Int    @id @default(autoincrement())
+  titulo               String
+  anoLancamento        Int
+  imagem               String
+  sinopse              String
+  elenco               String
+  categoria            String
+  valorLocacao         Float
+  quantidadeDisponivel Int
+
+  // Adicione este campo para criar a relação oposta
+  locacoes Locacao[]
+}
+
+// Modelo de Locação
+model Locacao {
+  id                  Int      @id @default(autoincrement())
+  locadorId           Int
+  filmeId             Int
+  dataRetirada        DateTime
+  dataDevolucao       DateTime
+  horaLimiteDevolucao DateTime
+  valorMultaAtraso    Float
+  valorTotal          Float
+  situacao            String // [Regular, Atrasado, Entregue]
+
+  // Relacionamentos
+  locador Pessoa @relation(fields: [locadorId], references: [id])
+  filme   Filme  @relation(fields: [filmeId], references: [id])
+}
