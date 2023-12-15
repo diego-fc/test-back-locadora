@@ -45,7 +45,9 @@ async function findUser(req, res) {
     try {
       const users = await prisma.pessoa.findMany();
       return res.status(200).json(users);
-    } catch (error) {}
+    } catch (error) {
+      return res.status(400).json(error);
+    }
   };
 
   main()
@@ -93,8 +95,7 @@ async function deleteUser(req, res) {
 		  });
 		  res.json(deletedUser);
 	} catch (error) {
-		console.log("🚀 ~ file: controllerUsuario.js:96 ~ deleteUser ~ error:", error)
-		res.status(404).json(error)
+    return res.status(404).json(error);
 	}
 }
 

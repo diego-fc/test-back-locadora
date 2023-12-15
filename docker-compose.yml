@@ -6,9 +6,9 @@ services:
     container_name: db_container
     restart: always
     environment:
-      POSTGRES_PASSWORD: mydb
-      POSTGRES_USER: mydb
-      POSTGRES_DB: mydb
+      POSTGRES_PASSWORD: CT5SAihFkG0RIBkyuAkH8G_61k9UPSMa
+      POSTGRES_USER: yrnozpvn
+      POSTGRES_DB: yrnozpvn
     ports:
       - '5432:5432'
     volumes:

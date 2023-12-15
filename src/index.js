@@ -1,9 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
-const { createUser, findUser, updateUser, deleteUser } = require("./src/controllers/controllerUsuario");
-const { createFilms, findFilms, updateFilms, deleteFilms } = require("./src/controllers/controllerFilmes");
-const { createLocation, findLocation, updateLocation, deleteLocation } = require("./src/controllers/controllerLocation");
+const { createUser, findUser, updateUser, deleteUser } = require("./controllers/controllerUsuario");
+const { createFilms, findFilms, updateFilms, deleteFilms } = require("./controllers/controllerFilmes");
+const { createLocation, findLocation, updateLocation, deleteLocation } = require("./controllers/controllerLocation");
 
 const server = express();
 
