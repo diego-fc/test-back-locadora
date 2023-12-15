@@ -1,14 +1,19 @@
 const { PrismaClient } = require("@prisma/client");
-const { object, string } = require("zod");
+const { object, string, number } = require("zod");
 
 const prisma = new PrismaClient();
 
 async function createLocation(req, res) {
   const { body } = req;
   const createLocacaoSchema = object({
-    email: string().email(),
-    nome: string(),
-    acesso: string(),
+    locadorId: number(),
+    filmeId: number(),
+    dataRetirada: string(),
+    dataDevolucao: string(),
+    horaLimiteDevolucao: string(),
+    valorMultaAtraso: number(),
+    valorTotal: number(),
+    situacao: string(),
   });
 
   const createLocacao = async (data) => {
@@ -17,6 +22,10 @@ async function createLocation(req, res) {
       const locacao = await prisma.locacao.create({ data: validatedData });
       return locacao;
     } catch (error) {
+      console.log(
+        "🚀 ~ file: controllerLocation.js:20 ~ createLocacao ~ error:",
+        error
+      );
       return null;
     }
   };
@@ -25,7 +34,7 @@ async function createLocation(req, res) {
     try {
       const newLocacao = await createLocacao(body);
       if (newLocacao === null) {
-        return res.json("Email já existe");
+        return res.json("Não foi possivel criar locação");
       }
       return res.json(newLocacao);
     } catch (error) {}
@@ -66,9 +75,9 @@ async function updateLocation(req, res) {
   const main = async () => {
     try {
       const updateddLocacao = await prisma.locacao.update({
-				where: { id: parseInt(id) },
-				data: { nome, email, acesso },
-			});
+        where: { id: parseInt(id) },
+        data: { nome, email, acesso },
+      });
       if (updateddLocacao === null) {
         return res.json("Não foi possivel atualizar");
       }
@@ -87,14 +96,19 @@ async function updateLocation(req, res) {
 
 async function deleteLocation(req, res) {
   try {
-		const { id } = req.path;
-		  const deletedLocacao = await prisma.locacao.delete({
-		    where: { id: parseInt(id) },
-		  });
-		  res.json(deletedLocacao);
-	} catch (error) {
-		res.status(404).json("Não foi possivel deletar Usuario")
-	}
+    const { id } = req.path;
+    const deletedLocacao = await prisma.locacao.delete({
+      where: { id: parseInt(id) },
+    });
+    res.json(deletedLocacao);
+  } catch (error) {
+    res.status(404).json("Não foi possivel deletar Usuario");
+  }
 }
 
-module.exports = { createLocation, findLocation, updateLocation, deleteLocation };
+module.exports = {
+  createLocation,
+  findLocation,
+  updateLocation,
+  deleteLocation,
+};

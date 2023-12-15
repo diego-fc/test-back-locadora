@@ -87,13 +87,14 @@ async function updateUser(req, res) {
 
 async function deleteUser(req, res) {
   try {
-		const { id } = req.path;
+		const { id } = req.params;
 		  const deletedUser = await prisma.pessoa.delete({
 		    where: { id: parseInt(id) },
 		  });
 		  res.json(deletedUser);
 	} catch (error) {
-		res.status(404).json("Não foi possivel deletar Usuario")
+		console.log("🚀 ~ file: controllerUsuario.js:96 ~ deleteUser ~ error:", error)
+		res.status(404).json(error)
 	}
 }
 
